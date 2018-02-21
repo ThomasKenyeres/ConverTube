@@ -1,7 +1,8 @@
+import glob
 import os
 
 from convertube.core import cli_helper
-from convertube.core.enums import VideoFormat
+from convertube.core.enums import VideoFormat, CT_Conf
 
 
 def yt_url_is_valid(url):
@@ -34,8 +35,15 @@ def download_video(url, dl_path, video_format=VideoFormat.MP4):
     }
 
 def convert_video_to_mp3(video_path, new_mp3_path):
-    pass
+    video_path = video_path.replace("\"", "\\\"")
+    new_mp3_path = new_mp3_path.replace("\"", "\\\"")
+    # TODO: use ffmpy library
+    cmd = "ffmpeg -i \"" + video_path + "\" \"" + new_mp3_path + "\""
+    os.system(cmd)
 
 def empty_video_cache():
-    pass
+    path = CT_Conf.video_cache_path + "/*"
+    r = glob.glob(path)
+    for f in r:
+        os.remove(f)
 
